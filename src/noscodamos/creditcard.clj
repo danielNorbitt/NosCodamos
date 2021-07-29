@@ -1,6 +1,7 @@
 (ns noscodamos.creditcard
-  (:require [noscodamos.database :as n.database])
-  )
+  (:require [noscodamos.database :as db]))
+
+(use 'java-time)
 
 (defn exibir-dados-cliente
   "Exibe dado de um cliente"
@@ -47,10 +48,32 @@
   [gasto categoria]
   (filter #(= (key %) categoria) gasto))
 
-(exibir-dados-cliente (n.database/cliente))
-(exibir-dados-cartao (n.database/cartao-de-credito))
-(listagem-de-compras (n.database/lista-de-compras))
-(println (agrupar-gastos-categoria (n.database/lista-de-compras)))
-(println (filter-agrupamento
-           (agrupar-gastos-categoria (n.database/lista-de-compras)) "Compras"))
+(defn pegar-mes-data [data]
+  (as (local-date "dd/MM/yyyy" data) :month-of-year))
 
+(defn calculo-fatura-mes
+  "Calculo da fatura do mes"
+  [fatura mes]
+  (->>
+    (fatura)
+    (filter #(= (pegar-mes-data (:data %)) mes))
+    (map :valor)
+    (reduce + 0)))
+
+(defn busca-por
+  ""
+  [compras busca]
+  (->> (compras)
+       (filter #(or (= (:valor %) busca)
+                    (= (:estabelecimento %) busca)))
+       ))
+
+(exibir-dados-cliente (db/cliente))
+(exibir-dados-cartao (db/cartao-de-credito))
+(listagem-de-compras (db/lista-de-compras))
+(println (agrupar-gastos-categoria (db/lista-de-compras)))
+(println (filter-agrupamento
+           (agrupar-gastos-categoria (db/lista-de-compras)) "Compras"))
+
+(println "Total da fatura do mes é" (calculo-fatura-mes db/lista-de-compras 1))
+(println "Todas as compras" (busca-por db/lista-de-compras 23.59))

@@ -17,4 +17,4 @@
                            {:data "25/06/2021" :valor 55 :estabelecimento "HBO Max" :categoria "Entretenimento"},
                            {:data "25/06/2021" :valor 55 :estabelecimento "Disney Plus" :categoria "Entretenimento"},
                            {:data "30/03/2021" :valor 0.59 :estabelecimento "Supermercado" :categoria "Alimentação"},
-                           {:data "30/03/2021" :valor 90.59 :estabelecimento "Kabum" :categoria "Compras"}])
+                           {:data "30/04/2021" :valor 90.59 :estabelecimento "Kabum" :categoria "Compras"}])
