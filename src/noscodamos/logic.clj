@@ -6,19 +6,23 @@
 (use 'java-time)
 (s/set-fn-validation! true)
 
-(s/defn cria-cliente :- m/Cliente
+(s/defn cria-cliente
   [nome :- m/StrNotBlank
    cpf :- m/StrNotBlank
    email :- m/StrNotBlank]
-  {:cpf cpf :nome nome :email email})
+  {:cliente/cpf cpf :cliente/nome nome :cliente/email email})
 
-(s/defn cria-cartao :- m/Cartao
-  [cpf :- m/StrNotBlank
+(s/defn cria-cartao
+  [cpf
    numero :- m/StrNotBlank
    cvv :- s/Num
    validade :- m/StrNotBlank
    limite :- m/Moeda]
-  {:cpf cpf :numero numero :cvv cvv :validade validade :limite limite})
+  {:cartao/cpf      cpf
+   :cartao/numero   numero
+   :cartao/cvv      cvv
+   :cartao/validade validade
+   :cartao/limite   limite})
 
 (s/defn pega-cartao-cliente :- [m/Cartao]
   [cpf :- m/StrNotBlank
@@ -44,20 +48,19 @@
   (let [total (total-cartao cartao compras)]
     (<= (+ total valor) (:limite cartao))))
 
-(s/defn cria-compra :- (s/maybe m/Compra)
+(s/defn cria-compra
   [data :- m/StrNotBlank
    valor :- m/Moeda
    estabelecimento :- m/StrNotBlank
    categoria :- m/StrNotBlank
    numero-cartao :- m/StrNotBlank
    compras :- [m/Compra]]
-  (if (and (tem-limite? numero-cartao valor compras)
-           (pos? valor))
-    {:data            data
-     :valor           valor
-     :estabelecimento estabelecimento
-     :categoria       categoria
-     :numero-cartao   numero-cartao}
+  (if (pos? valor)
+    {:compra/data            data
+     :compra/valor           valor
+     :compra/estabelecimento estabelecimento
+     :compra/categoria       categoria
+     :compra/numero-cartao   numero-cartao}
     nil))
 
 (s/defn exibir-dados-cliente
